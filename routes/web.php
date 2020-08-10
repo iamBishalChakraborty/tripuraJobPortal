@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome')->name('home');
+Route::get('/dashboard', 'UserController@index')->name('dashboard');
+
 
 Route::layout('layouts.auth')->group(function () {
     Route::middleware('guest')->group(function () {
@@ -44,7 +46,16 @@ Route::middleware('auth')->group(function () {
     Route::get('email/verify/{id}/{hash}', 'Auth\EmailVerificationController')
         ->middleware('signed')
         ->name('verification.verify');
-
     Route::post('logout', 'Auth\LogoutController')
         ->name('logout');
+
+
+    Route::group(['prefix'=>'dashboard'], function(){
+        Route::resource('/', 'UserController');
+        Route::get('/profile', 'UserController@userProfile')->name('user_profile');
+
+    });
+
+
 });
+
